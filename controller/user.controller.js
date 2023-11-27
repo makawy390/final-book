@@ -23,7 +23,7 @@ const register = asyncWrapper(
         const {first_name , last_name , email
             ,password , gender , country 
             , role ,description } = req.body;
-        const result = await cloudinary.uploader.upload(req.file.path);
+        const result = await cloudinary.uploader.upload(req.file.path,{folder:"books"});
         const oldEmail = await User.findOne({email: email});
         if (oldEmail) {
         const error = appError.create("البريد الالكتروني  موجود بالفعل" , 400 , httpStatus.FAIL );;
@@ -80,7 +80,7 @@ const updateUser = asyncWrapper(
             ,password , gender , country 
             , role ,description } = req.body;
         const hashingPassword = await bcrypt.hash(password , 10);
-        const result = await cloudinary.uploader.upload(req.file.path);
+        const result = await cloudinary.uploader.upload(req.file.path,{folder:"books"});
         const update = await User.updateOne({_id : req.params.id} , {$set:{
             first_name,
             last_name,
