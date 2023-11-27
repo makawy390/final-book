@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const appError = require('../utils/appError');
 const httpStatus = require('../utils/httpStatus');
 const generateJWT = require('../utils/generateToken');
+const cloudinary = require('../utils/cloudinary.app');
+
 /* =============================== Get All Users ======================================== */
 const getAllUsers = asyncWrapper(
     async(req,res)=>{
@@ -21,6 +23,7 @@ const register = asyncWrapper(
         const {first_name , last_name , email
             ,password , gender , country 
             , role ,description } = req.body;
+        const result = await cloudinary.uploader.upload(req.file.path);
         const oldEmail = await User.findOne({email: email});
         if (oldEmail) {
         const error = appError.create("البريد الالكتروني  موجود بالفعل" , 400 , httpStatus.FAIL );;
@@ -37,7 +40,10 @@ const register = asyncWrapper(
             gender,
             country,
             description,
-            profile : req.file.filename,
+            // profile : req.file.filename,
+            profile : result.secure_url,
+            
+            
         });
         const token = await generateJWT({email : newUser.email , id: newUser._id , role : newUser.role});
         newUser.token = token;
@@ -74,6 +80,7 @@ const updateUser = asyncWrapper(
             ,password , gender , country 
             , role ,description } = req.body;
         const hashingPassword = await bcrypt.hash(password , 10);
+        const result = await cloudinary.uploader.upload(req.file.path);
         const update = await User.updateOne({_id : req.params.id} , {$set:{
             first_name,
             last_name,
@@ -83,7 +90,8 @@ const updateUser = asyncWrapper(
             country,
             description,
             gender,
-            profile : req.file.filename,
+            // profile : req.file.filename,
+            profile : result.secure_url,
         }});
         if (!update) {
             const error = appError.create(httpStatus.MESSAGE , 404 , httpStatus.FAIL );;
