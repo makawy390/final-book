@@ -1,7 +1,9 @@
 const Books = require('../db/books.model');
 const httpStatus = require('../utils/httpStatus')
 const asyncWrapper = require('../middleWare/asyncWrapper');
-const appError = require('../utils/appError') 
+const appError = require('../utils/appError');
+const cloudinary = require('../utils/cloudinary.app');
+
 /* ====================== Get All Books ================================= */
 const getAllBooks = async (req , res) =>{
     const query = req.query;
@@ -16,12 +18,15 @@ const getAllBooks = async (req , res) =>{
 const addBook = asyncWrapper(
     async(req , res , next)=>{
         const {title , description , price , link} = req.body;
+        const result = await cloudinary.uploader.upload(req.file.path);
             const newBook =  new Books({
                 title,
                 description,
                 price,
                 link,
-                image : req.file.filename,
+                // image : req.file.filename,
+                image : result.secure_url,
+                
             });
             if (!newBook) {
             const error = appError.create(httpStatus.MESSAGE , 404 , httpStatus.FAIL );
@@ -46,12 +51,14 @@ const get_single_book = asyncWrapper(
 const update_book = asyncWrapper(
     async (req ,res , next) =>{
         const {title , description , price , link} = req.body;
+        const result = await cloudinary.uploader.upload(req.file.path);
             const update = await Books.findByIdAndUpdate({_id : req.params.id} , {$set: {
                  title,
                 description,
                 price,
                 link,
-                image : req.file.filename
+                // image : req.file.filename,
+                   image : result.secure_url,            
             }});
             if (!update) {
            const error = appError.create(httpStatus.MESSAGE , 404 , httpStatus.FAIL );
