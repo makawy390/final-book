@@ -70,7 +70,7 @@ const update_book = asyncWrapper(
 /* ====================== delete Book By Id ================================= */
 const delete_book = asyncWrapper(
      async (req , res , next) =>{
-    const del = await Books.findByIdAndDelete({_id : req.params.id});
+    const del = await Books.deleteOne({_id : req.params.id});
     if (!del) {
            const error = appError.create(httpStatus.MESSAGE , 404 , httpStatus.FAIL );
             return next(error);
