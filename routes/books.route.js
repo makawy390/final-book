@@ -38,9 +38,9 @@ router.route('/view/:id')
 .get(get_single_book); 
 
 router.route('/update/:id')
-.patch(verifyToken,allowedTo('admin', 'manager'),uploadImage.single('image') , update_book);
+.patch(verifyToken,allowedTo('admin','manager'),uploadImage.single('image') , update_book);
 
 router.route('/delete/:id')
-.delete(allowedTo('admin', 'manager') ,  delete_book);
+.delete(verifyToken,allowedTo('admin', 'manager'),delete_book);
 
 module.exports = router;
