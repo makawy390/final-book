@@ -42,13 +42,11 @@ const register = asyncWrapper(
             description,
             // profile : req.file.filename,
             profile : result.secure_url,
-            
-            
         });
         const token = await generateJWT({email : newUser.email , id: newUser._id , role : newUser.role});
         newUser.token = token;
         await newUser.save();
-      return  res.status(201).json({status : "success" , data : {newUser} , data_ar : "تم انشاء حساب جديد"});
+      return  res.status(201).json({status : "success" , data : "add a new user" , data_ar : "تم انشاء حساب جديد"});
     }
 )
  /* =============================== Login ======================================== */
@@ -68,7 +66,7 @@ const login = asyncWrapper(
      data_ar : "تم تسجيل الدخول بنجاح" ,token});       
     }
     else{
-        const error = appError.create("البريد الالكتروني او كلمة المرور غير صحيحة" , 500 , httpStatus.FAIL );;
+        const error = appError.create("email and  password is not correct", 500 , httpStatus.FAIL );;
         return next(error); 
     }
     }
@@ -97,20 +95,14 @@ const updateUser = asyncWrapper(
             const error = appError.create(httpStatus.MESSAGE , 404 , httpStatus.FAIL );;
            return next(error);
         }
-        return res.status(200).json({status : httpStatus.SUCCESS , data_en : "updated this book" , data_ar : "تم التعديل بنجاح"});       
+        return res.status(200).json({status : httpStatus.SUCCESS , data_en : "updated your user" , data_ar : "تم التعديل بنجاح"});       
     }
 );
  /* =============================== Profile ======================================== */
-const deleteUser = asyncWrapper(
-    async(req, res ,next)=>{
+const deleteUser =  async(req, res ,next)=>{
         const del = await User.deleteOne({_id : req.params.id});
-        if (!del) {
-        const error = appError.create(httpStatus.MESSAGE , 404 , httpStatus.FAIL );;
-        return next(error);
-        }
-        return res.status(200).json({status : httpStatus.SUCCESS, data_en : "deleted this book" , data_ar : "تم حذف الاكونت بنجاح"} );       
+        return res.status(200).json({status : httpStatus.SUCCESS, data_en : "deleted your user" , data_ar : "تم حذف الاكونت بنجاح"} );       
     }
-)
  /* =============================== Profile ======================================== */
 const profile = asyncWrapper(
     async (req , res , next)=>{
