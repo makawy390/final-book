@@ -26,7 +26,7 @@ const verifyToken = require('../middleWare/verifyToken');
 const allowedTo = require('../middleWare/allowedTo');
 // const funcCloudinary = require('../middleWare/funcCloundinary');
 router.route('/')
-.get(verifyToken,getAllUsers);
+.get(verifyToken,allowedTo('admin','manager'),getAllUsers);
 
 router.route('/register')
 .post(upload.single('profile'),register);
@@ -41,6 +41,6 @@ router.route('/update-profile/:id')
 .patch(verifyToken,upload.single('profile'),updateUser);
 
 router.route('/delete-profile/:id')
-.delete(allowedTo('admin', 'manager'),deleteUser);
+.delete(verifyToken,allowedTo('admin', 'manager'),deleteUser);
 
 module.exports = router;
