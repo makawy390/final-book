@@ -68,16 +68,10 @@ const update_book = asyncWrapper(
     }
 )
 /* ====================== delete Book By Id ================================= */
-const delete_book = asyncWrapper(
-     async (req , res , next) =>{
+const delete_book = async (req , res) =>{
     const del = await Books.deleteOne({_id : req.params.id});
-    if (!del) {
-           const error = appError.create(httpStatus.MESSAGE , 404 , httpStatus.FAIL );
-            return next(error);
-            }
-   return res.status(200).json({status : httpStatus.SUCCESS ,  data_ar : httpStatus.DELETE_BOOK});
+    res.status(200).json({status : httpStatus.SUCCESS , data : del });
 }
-)
 // const delAll = asyncWrapper(
 //     async(req , res)=>{
 //     const del = await Books.deleteMany();
