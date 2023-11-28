@@ -79,7 +79,7 @@ const updateUser = asyncWrapper(
             , role ,description } = req.body;
         const hashingPassword = await bcrypt.hash(password , 10);
         const result = await cloudinary.uploader.upload(req.file.path,{folder:"books"});
-        const update = await User.findOneAndUpdate({_id : req.params.id} , {$set:{
+        const update = await User.updateOne({_id : req.params.id} , {$set:{
             first_name,
             last_name,
             email,
