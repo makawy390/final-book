@@ -79,7 +79,7 @@ const updateUser = asyncWrapper(
             , role ,description } = req.body;
         const hashingPassword = await bcrypt.hash(password , 10);
         const result = await cloudinary.uploader.upload(req.file.path,{folder:"books"});
-        const update = await User.updateOne({_id : req.params.id} , {$set:{
+        const update = await User.findByIdAndUpdate({_id : req.params.id} , {$set:{
             first_name,
             last_name,
             email,
@@ -95,6 +95,7 @@ const updateUser = asyncWrapper(
             const error = appError.create(httpStatus.MESSAGE , 404 , httpStatus.FAIL );;
            return next(error);
         }
+        console.log(hashingPassword);
         return res.status(200).json({status : httpStatus.SUCCESS , data_en : "updated your user" , data_ar : "تم التعديل بنجاح"});       
     }
 );
